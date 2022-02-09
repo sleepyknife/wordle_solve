@@ -5,7 +5,23 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>Wordle 幫你猜</title>
 	</head>
-	<body>
+	<script>
+		var get_list
+		function initial_list()
+		{
+			var client = new XMLHttpRequest()
+			client.open("GET", "https://raw.githubusercontent.com/sleepyknife/wordle_solve/master/Ref/allowed_words.txt");
+			console.log(client)
+			client.onreadystatechange = function() {
+			  get_list = client.responseText.split("\n")
+			  console.log(get_list)
+			  console.log(get_list.length)
+			}
+			client.send()
+			console.log("Initial load")
+		}
+	</script>
+	<body onload="initial_list()">
 		<p>這是一個給懶人使用，幫忙猜wordle 遊戲的懶人網站</p>
 		<p>這個網站只能幫你猜今天的單字，沒有報明牌的功能</p>
 		<h1>使用方法：</h1>
@@ -37,18 +53,55 @@
 		<input type="text" id="result" name="result_var" maxlength="5" size="5">
 		<input type="button" value="幫我猜！" onclick="CheatIt()">
 		<script>
+			
+			function filterItems(arr, query)
+			{
+				return arr.filter( function (el) {
+					return el.match(query)
+				})
+			}
+			
 			function CheatIt()
 			{
-				var guess_str = document.getElementById('guess').value
+				var guess_arr = document.getElementById('guess').value.split("")
+				var mapping_arr = document.getElementById('result').value.split("")
 				var guess_number = 1234
-				alert("你猜的文字是：" + guess_str + "\n目前共計算出有：" + guess_number + " 種結果 \n請依照顯示清單再次嘗試！\n還沒寫好啦其實ㄏㄏ")
-				var guess_list = ["black", "opera", "power", "brand", "elder"]
+				console.log(mapping_arr)
+				
+				for (let i = 0; i < 5; i++)
+				{
+					var len = 4
+					/* Absoult position filter */
+					if(mapping_arr[i] == '+')
+					{
+						var char_front = ".".repeat(i)
+						var char_after = ".".repeat(len-i)
+						var reg_exp = new RegExp(char_front + guess_arr[i] + char_after)
+						get_list = filterItems(get_list, reg_exp)
+						console.log(get_list.length)
+					}
+					/* Contain Character, keep match */
+					else if(mapping_arr[i] == "-")
+					{
+						var reg_exp = new RegExp(guess_arr[i])
+						get_list = filterItems(get_list, reg_exp)
+					}
+					/* Exclude character filter, ie. remove match */
+					else if (mapping_arr[i] == '*')
+					{
+						var reg_exp = new RegExp(guess_arr[i])
+						exclude_list = filterItems(get_list, reg_exp)
+						get_list = get_list.filter(x => !exclude_list.includes(x))
+					}
+				}
+				alert("你猜的文字是：" + document.getElementById('guess').value + "\n目前共計算出有：" + get_list.length + " 種結果 \n請依照顯示清單再次嘗試！\n還沒寫好啦其實ㄏㄏ")
 				var str = "<ul>"
-				guess_list.forEach(function(word) {
+				get_list.forEach(function(word) {
 				  str += "<li>"+ word + "</li>"
 				})
 				str += "</ul>"
 				document.getElementById("slideContainer").innerHTML = str;
+
 			}
 		</script>
 		

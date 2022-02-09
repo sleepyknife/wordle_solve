@@ -42,10 +42,19 @@
 				var guess_str = document.getElementById('guess').value
 				var guess_number = 1234
 				alert("你猜的文字是：" + guess_str + "\n目前共計算出有：" + guess_number + " 種結果 \n請依照顯示清單再次嘗試！\n還沒寫好啦其實ㄏㄏ")
-				
+				var guess_list = ["black", "opera", "power", "brand", "elder"]
+				var str = "<ul>"
+				guess_list.forEach(function(word) {
+				  str += "<li>"+ word + "</li>"
+				})
+				str += "</ul>"
+				document.getElementById("slideContainer").innerHTML = str;
 			}
 		</script>
 		
+		<hr>
+		<h1>預測的文字清單：</h1>
+		<div id="slideContainer"></div>
 		
 	</body>
 </html>

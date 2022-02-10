@@ -94,19 +94,20 @@
 						get_list = get_list.filter(x => !exclude_list.includes(x))
 					}
 				}
-				alert("你猜的文字是：" + document.getElementById('guess').value + "\n目前共計算出有：" + get_list.length + " 種結果 \n請依照顯示清單再次嘗試！\n還沒寫好啦其實ㄏㄏ")
+				<!-- alert("你猜的文字是：" + document.getElementById('guess').value + "\n目前共計算出有：" + get_list.length + " 種結果 \n請依照顯示清單再次嘗試！") -->
 				var str = "<ul>"
 				get_list.forEach(function(word) {
 				  str += "<li>"+ word + "</li>"
 				})
 				str += "</ul>"
-				document.getElementById("slideContainer").innerHTML = str;
-
+				document.getElementById("slideContainer").innerHTML = str
+				document.getElementById("slideContainer").innerHTML = "<font size='5'>預測的結果：" + get_list.length + "</font>"
 			}
 		</script>
 		
 		<hr>
 		<h1>預測的文字清單：</h1>
+		<div id="slideNumber"></div>
 		<div id="slideContainer"></div>
 		
 	</body>

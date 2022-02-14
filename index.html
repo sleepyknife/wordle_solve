@@ -81,10 +81,17 @@
 						console.log(get_list.length)
 					}
 					/* Contain Character, keep match */
-					else if(mapping_arr[i] == "-")
+					else if(mapping_arr[i] == "?")
 					{
 						var reg_exp = new RegExp(guess_arr[i])
 						get_list = filterItems(get_list, reg_exp)
+						
+						/* Remove wrong position */
+						var char_front = ".".repeat(i)
+						var char_after = ".".repeat(len-i)
+						var reg_exp = new RegExp(char_front + guess_arr[i] + char_after)
+						exclude_list = filterItems(get_list, reg_exp)
+						get_list = get_list.filter(x => !exclude_list.includes(x))
 					}
 					/* Exclude character filter, ie. remove match */
 					else if (mapping_arr[i] == '*')

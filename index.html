@@ -18,8 +18,9 @@
 			  console.log(get_list.length)
 			}
 			client.send()
-			console.log("Initial load")
+			console.log("Initial load")			
 		}
+		
 	</script>
 	<body onload="initial_list()">
 		<p>這是一個給懶人使用，幫忙猜wordle 遊戲的懶人網站</p>
@@ -51,9 +52,9 @@
 		<input type="text" id="guess" name="guess_var" maxlength="5" size="5"><br><br>
 		<label for="result">猜的結果：</label>
 		<input type="text" id="result" name="result_var" maxlength="5" size="5">
-		<input type="button" value="幫我猜！" onclick="CheatIt()">
+		<button id=custom_btn>幫我猜！</button>
 		<script>
-			
+			document.getElementById("custom_btn").addEventListener ("click", CheatIt)
 			function filterItems(arr, query)
 			{
 				return arr.filter( function (el) {
@@ -94,6 +95,25 @@
 						get_list = get_list.filter(x => !exclude_list.includes(x))
 					}
 				}
+				<!-- Analysis result table -->
+				var row = 1
+				var html_table = "<table border=1 width=100%><tr>"
+				for (i=65; i<=90;i++)
+				{
+					var query_letter = String.fromCharCode(i).toLowerCase()
+					var query_count = get_list.filter( x => x.match(query_letter)).length
+					console.log(query_letter + ":" + query_count)
+					<!-- console.log(query_letter) -->
+					if(row > 10)
+					{
+						row = 1
+						html_table += "<tr>"
+					}
+					html_table += "<td align=center>" + query_letter + ":" + query_count + "</td>"
+					row += 1
+				}
+				html_table += "</tr></table>"
+				
 				<!-- alert("你猜的文字是：" + document.getElementById('guess').value + "\n目前共計算出有：" + get_list.length + " 種結果 \n請依照顯示清單再次嘗試！") -->
 				var str = "<ul>"
 				get_list.forEach(function(word) {
@@ -101,12 +121,16 @@
 				})
 				str += "</ul>"
 				document.getElementById("slideContainer").innerHTML = str
-				document.getElementById("slideContainer").innerHTML = "<font size='5'>預測的結果：" + get_list.length + "</font>"
+				document.getElementById("slideNumber").innerHTML = "<font size='5'>預測的結果：" + get_list.length + "</font>"
+				document.getElementById("result_table").innerHTML = html_table
 			}
+			
 		</script>
 		
 		<hr>
 		<h1>預測的文字清單：</h1>
+		<hr>
+		<div id="result_table"></div>
 		<div id="slideNumber"></div>
 		<div id="slideContainer"></div>
 		
